@@ -42,10 +42,12 @@ class _AddEditTodoContentState extends State<AddEditTodoContent> {
     super.dispose();
   }
 
+  bool get hasTodo => widget.todo != null;
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
-      title: Text(widget.todo != null ? 'Update Todo' : 'Create Todo'),
+      title: Text(hasTodo ? 'Update Todo' : 'Create Todo'),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -78,42 +80,39 @@ class _AddEditTodoContentState extends State<AddEditTodoContent> {
           onPressed: Navigator.of(context).pop,
           child: const Text('Cancel'),
         ),
-        if (widget.todo != null) ...[
-          TextButton(
-            onPressed: () async {
-              String title = titleController.text;
-              String description = descriptionController.text;
-              await Provider.of<Database>(context, listen: false).updateTodo(TodoCompanion(
-                id: drift.Value(widget.todo!.id),
-                title: drift.Value(title),
-                description: drift.Value(description),
-                isFinished: drift.Value(isFinished),
-              ));
-              widget.onUpdated!();
-
-              Navigator.of(context).pop();
-            },
-            child: const Text('Update'),
-          ),
-        ] else ...[
-          TextButton(
-            onPressed: () async {
-              String title = titleController.text;
-              String description = descriptionController.text;
-
-              await Provider.of<Database>(context, listen: false).insertTodo(TodoCompanion(
-                title: drift.Value(title),
-                description: drift.Value(description),
-                isFinished: drift.Value(isFinished),
-              ));
-              widget.onCreated!();
-
-              Navigator.of(context).pop();
-            },
-            child: const Text('Create'),
-          ),
-        ],
+        TextButton(
+          onPressed: () async {
+            await createUpdateTodo(context);
+            Navigator.of(context).pop();
+          },
+          child: Text(hasTodo ? 'Update' : 'Create'),
+        ),
       ],
     );
+  }
+
+  Future<void> createUpdateTodo(BuildContext context) async {
+    String title = titleController.text;
+    String description = descriptionController.text;
+
+    if (hasTodo) {
+      TodoCompanion updatedTodo = TodoCompanion(
+        id: drift.Value(hasTodo ? widget.todo!.id : 0),
+        title: drift.Value(title),
+        description: drift.Value(description),
+        isFinished: drift.Value(isFinished),
+      );
+      await Provider.of<Database>(context, listen: false).updateTodo(updatedTodo);
+      widget.onUpdated!();
+    } else {
+      TodoCompanion newTodo = TodoCompanion(
+        title: drift.Value(title),
+        description: drift.Value(description),
+        isFinished: drift.Value(isFinished),
+      );
+      await Provider.of<Database>(context, listen: false).insertTodo(newTodo);
+
+      widget.onCreated!();
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:windows_todo_list/pages/components/content_body.dart';
+import 'package:windows_todo_list/pages/home/components/content_body.dart';
 import 'package:windows_todo_list/widget/add_edit_todo_content.dart';
 
 class Home extends StatefulWidget {
@@ -25,12 +25,15 @@ class _HomeState extends State<Home> {
 
   NavigationAppBar _buildNavigationAppBar() {
     return NavigationAppBar(
-      leading: Container(),
-      title: const Text(
-        'Todo List',
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+      automaticallyImplyLeading: false,
+      title: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
+        child: Text(
+          'Todo List',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       actions: Row(
@@ -47,9 +50,6 @@ class _HomeState extends State<Home> {
                         onCreated: () {
                           setState(() {});
                         },
-                        onUpdated: () {
-                          setState(() {});
-                        },
                       );
                     });
               },
@@ -63,10 +63,16 @@ class _HomeState extends State<Home> {
   }
 
   NavigationPane _buildNavigationPane() {
+    Size size = MediaQuery.of(context).size;
     return NavigationPane(
-      header: const FlutterLogo(
-        style: FlutterLogoStyle.horizontal,
-        size: 100,
+      size: const NavigationPaneSize(openMaxWidth: 150),
+      displayMode: size.width < 600 ? PaneDisplayMode.minimal : PaneDisplayMode.open,
+      header: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: const FlutterLogo(
+          style: FlutterLogoStyle.horizontal,
+          size: 100,
+        ),
       ),
       selected: selectedIndex,
       onChanged: (index) {
