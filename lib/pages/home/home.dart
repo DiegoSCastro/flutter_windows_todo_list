@@ -67,9 +67,9 @@ class _HomeState extends State<Home> {
     return NavigationPane(
       size: const NavigationPaneSize(openMaxWidth: 150),
       displayMode: size.width < 600 ? PaneDisplayMode.minimal : PaneDisplayMode.open,
-      header: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: const FlutterLogo(
+      header: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: FlutterLogo(
           style: FlutterLogoStyle.horizontal,
           size: 100,
         ),
