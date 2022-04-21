@@ -1,9 +1,10 @@
-## windows_todo_list
+## Windows_todo_list
 
 
-A simple TODO list
+#A simple TODO list - CRUD
 
-#CRUD - Local database
+- Local database with drift
+- Microsoft Fluent UI
 
-## Getting Started
+
 
